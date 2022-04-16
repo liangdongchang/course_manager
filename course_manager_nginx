@@ -1,0 +1,38 @@
+    #设定虚拟主机配置
+        server {
+            #侦听80端口
+            listen 80;
+            #listen 443 ssl;
+            #定义使用 www.nginx.cn访问
+    		#ssl on;
+            server_name  xxx.xxx.com;
+            #server_name  xxx.xxx.xxx.30;
+            #定义服务器的默认网站根目录位置
+            root /home/course_manager;
+    		#ssl_session_timeout 5m; 
+            #ssl_certificate   /etc/nginx/cert/xxx.pem;
+            #ssl_certificate_key  /etc/nginx/cert/xxx.key;
+            #ssl_ciphers ECDHE-RSA-AES128-GCM-SHA256:ECDHE:ECDH:AES:HIGH:!NULL:!aNULL:!MD5:!ADH:!RC4;
+            #ssl_protocols TLSv1 TLSv1.1 TLSv1.2;
+            #ssl_prefer_server_ciphers on;
+            #设定本虚拟主机的访问日志
+            #access_log  logs/nginx.access.log  main;
+     
+            #默认请求
+            location / {
+                #倒入了uwsgi的配置
+                include uwsgi_params; 
+    		    client_max_body_size	50m;
+                #连接uwsgi的超时时间
+               # uwsgi_connect_timeout 30; 
+     	    #设定了uwsig服务器位置
+     	    	uwsgi_pass 127.0.0.1:8102;
+            }
+            
+            location /static{
+          	alias /home/course_manager/static;
+            }
+    	location /media {
+    	alias /home/course_manager/media;
+    	}
+    }
